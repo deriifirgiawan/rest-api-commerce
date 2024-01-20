@@ -15,6 +15,7 @@ import { UserModule } from "./modules/user/user.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { LoggerMiddleware } from "./middlewares";
 import { APP_PIPE } from "@nestjs/core";
+import { ProductModule } from "./modules/merchant/product/modules";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { APP_PIPE } from "@nestjs/core";
     SeedsModule,
     UserModule,
     AuthModule,
+    ProductModule,
   ],
   providers: [
     {

@@ -13,6 +13,7 @@ import { Response, ResponseStatusCode } from "src/decorators";
 import { ResponseService } from "src/response/response.service";
 import { PayloadLoginDto, PayloadRegisterDto } from "../dto";
 import { UserServices } from "src/modules/user/user.service";
+import { TYPE_ROLE } from "src/enums";
 
 @Controller("auth")
 export class AuthController {
@@ -33,7 +34,7 @@ export class AuthController {
       );
     }
 
-    const isMatch = await bcrypt.compare(user?.password, payload?.password);
+    const isMatch = await bcrypt.compare(payload?.password, user?.password);
 
     if (!isMatch) {
       throw new ForbiddenException("Password is incorrect");
@@ -65,12 +66,12 @@ export class AuthController {
     try {
       const response = await this.authService.register({
         ...payload,
-        role_id: 1,
+        role_id: TYPE_ROLE.ADMIN,
       });
 
       return this.responseService.success("Success Registration", response);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new ServiceUnavailableException(error);
     }
   }
 
@@ -91,12 +92,12 @@ export class AuthController {
     try {
       const response = await this.authService.register({
         ...payload,
-        role_id: 2,
+        role_id: TYPE_ROLE.MERCHANT,
       });
 
       return this.responseService.success("Success Registration", response);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new ServiceUnavailableException(error);
     }
   }
 
@@ -117,12 +118,12 @@ export class AuthController {
     try {
       const response = await this.authService.register({
         ...payload,
-        role_id: 3,
+        role_id: TYPE_ROLE.CUSTOMER,
       });
 
       return this.responseService.success("Success Registration", response);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new ServiceUnavailableException(error);
     }
   }
 }
