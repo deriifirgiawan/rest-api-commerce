@@ -18,7 +18,6 @@ export class RoleServices {
   async getAllRole(): Promise<Role[]> {
     try {
       const role = await this.roleRepository.findAllRole();
-      console.log(role);
       return role;
     } catch (error) {
       throw new NotFoundException();

@@ -10,6 +10,10 @@ export class UserServices {
     private userRepository: UserRepositoryInterface,
   ) {}
 
+  async getUserById(id: number): Promise<User | undefined> {
+    return this.userRepository.findOneByCondition({ id });
+  }
+
   async addUser(payload: PayloadAddUser): Promise<User> {
     const { firstname, lastname, email, password, role_id, confirm_password } =
       payload;
