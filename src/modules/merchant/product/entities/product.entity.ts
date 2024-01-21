@@ -43,8 +43,21 @@ export class Product {
   @JoinTable()
   images: PhotoProduct[];
 
-  @ManyToMany(() => Categories, { cascade: true, eager: true })
-  @JoinTable()
+  @ManyToMany(() => Categories, (category) => category.product, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable({
+    name: "products_categories",
+    joinColumn: {
+      name: "products_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "categories_id",
+      referencedColumnName: "id",
+    },
+  })
   categories: Categories[];
 
   @CreateDateColumn({ type: "timestamp", name: "created_at" })

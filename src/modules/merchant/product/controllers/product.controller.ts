@@ -34,9 +34,9 @@ export class ProductController {
 
   @ResponseStatusCode()
   @Get(":id")
-  async getProductById(@Param() id: string) {
+  async getProductById(@Param() params: any) {
     try {
-      const result = await this.productService.getProductById(id);
+      const result = await this.productService.getProductById(params?.id);
 
       return this.responseService.success("Success Get Product", result);
     } catch (error) {
@@ -50,7 +50,11 @@ export class ProductController {
   async addProduct(@Body() payload: PayloadAddProductDto) {
     try {
       const response = await this.productService.addProduct(payload);
-      return this.responseService.success("Success Add Product", response);
+      const addCategory = await this.productService.addCategoriesProduct(
+        payload?.categoriesId,
+        response,
+      );
+      return this.responseService.success("Success Add Product", addCategory);
     } catch (error) {
       throw this.responseService.error(error);
     }
@@ -60,13 +64,19 @@ export class ProductController {
   @UseGuards(AuthGuard("jwt"))
   @Put("update/:id")
   async updateProduct(
-    @Param() id: string,
+    @Param() params: any,
     @Body() payload: PayloadAddProductDto,
   ) {
     try {
-      const response = await this.productService.updateProductById(id, payload);
-      return this.responseService.success("Success Add Product", response);
+      await this.productService.updateProductById(params?.id, payload);
+      await this.productService.deleteAndInsertCategory(
+        params?.id,
+        payload?.categoriesId,
+      );
+
+      return this.responseService.success("Success Update Product", null);
     } catch (error) {
+      console.log(error);
       throw this.responseService.error(error);
     }
   }
